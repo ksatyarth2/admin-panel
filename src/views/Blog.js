@@ -40,7 +40,9 @@ class Blog extends React.Component {
     }
     await fetch("https://chikkamagaluru-1fa59-default-rtdb.firebaseio.com/blog.json")
       .then((res) => res.json())
-      .then((data) => (Blog = data));
+      .then((data) => {
+        for(let eachData in data) Blog.push(data[eachData]);
+      });
     console.log(Blog);
     if (Blog === null) {
       this.setState({ isEmpty: true, isLoading: false });
