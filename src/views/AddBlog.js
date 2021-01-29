@@ -2,6 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import firebase from "../variables/config";
 import NotificationAlert from "react-notification-alert";
+import { v1 as uuidv1 } from 'uuid';
 
 // reactstrap components
 import {
@@ -45,17 +46,18 @@ class AddBlog extends React.Component {
     window.$notifications.push([body, "", icon]);
   };
   async addBlog(e) {
+    var uniqueId = uuidv1();
     var BlogRef = firebase
       .database()
       .ref()
-      .child("blog/" + window.$blogNumber);
+      .child("blog/" + uniqueId);
     BlogRef.set({
       title: this.state.title,
       body: this.state.body,
       links: this.state.links,
       author:this.state.author,
       image: this.state.image,
-      index: window.$blogNumber,
+      index: uniqueId,
       datentime : String(new Date()),
     });
     window.$notification = [true, "Blog added.", "success", "icon-check-2"];
