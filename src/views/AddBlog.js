@@ -33,7 +33,7 @@ class AddBlog extends React.Component {
     var options = {};
     options = {
       place: place,
-      body: (
+      message: (
         <div>
           <div>{body}</div>
         </div>
@@ -46,7 +46,8 @@ class AddBlog extends React.Component {
     window.$notifications.push([body, "", icon]);
   };
   async addBlog(e) {
-    var uniqueId = uuidv1();
+    try {
+      var uniqueId = uuidv1();
     var BlogRef = firebase
       .database()
       .ref()
@@ -63,6 +64,12 @@ class AddBlog extends React.Component {
     window.$notification = [true, "Blog added.", "success", "icon-check-2"];
     this.setState({ redirect: true });
   }
+  catch (error) {
+    this.notify("tc", "Form can't be blank", "danger", "icon-simple-remove");
+    window.$notification = [true, "Form can't be blank", "danger", "icon-simple-remove"];
+    console.log(error);
+    }
+  }  
   async getFile(e) {
     var name = e.target.files[0].name + Date.now();
     await storageRef.child(name).put(e.target.files[0]);
