@@ -2,6 +2,9 @@
 import Blog from "views/Blog.js";
 import BlogDetail from "views/BlogDetail.js";
 import AddBlog from "views/AddBlog.js";
+import Destination from "views/Destination.js";
+import DestinationDetail from "views/DestinationDetail.js";
+import AddDestination from "views/AddDestination.js";
 import Login from "views/Login.js";
 import AddAdmin from "views/AddAdmin.js";
 
@@ -23,6 +26,16 @@ var routes = [
     component: Blog,
     layout: "/admin"
   },
+  
+  {
+    path: "/destinations",
+    name: "Destination List",
+    rtlName: "قائمة الجدول",
+    icon: "tim-icons icon-watch-time",
+    component: Destination,
+    layout: "/admin"
+  },
+  
   {
     path: "/add-admin",
     name: "Add Admin",
@@ -30,7 +43,6 @@ var routes = [
     component: AddAdmin,
     layout: "/admin"
   }, 
-  
   {
     path: "/blog-detail",
     name: "Blog Detail",
@@ -45,6 +57,22 @@ var routes = [
     rtlName: "قائمة الجدول",
     icon: "tim-icons icon-watch-time",
     component: AddBlog,
+    layout: "/admin"
+  },
+  {
+    path: "/destination-detail",
+    name: "Destination Detail",
+    rtlName: "قائمة الجدول",
+    icon: "tim-icons icon-watch-time",
+    component: DestinationDetail,
+    layout: "/admin"
+  },
+  {
+    path: "/add-destination",
+    name: "New Destination",
+    rtlName: "قائمة الجدول",
+    icon: "tim-icons icon-watch-time",
+    component: AddDestination,
     layout: "/admin"
   },
   {

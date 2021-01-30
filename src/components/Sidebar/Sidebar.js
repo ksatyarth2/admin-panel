@@ -92,7 +92,7 @@ class Sidebar extends React.Component {
       <div className="sidebar" data={bgColor}>
         <div className="sidebar-wrapper" ref="sidebar">
           <Nav>
-            {routes.slice(0,-3).map((prop, key) => {
+            {routes.slice(0,-5).map((prop, key) => {
               if (prop.redirect) return null;
               return (
                 <li
