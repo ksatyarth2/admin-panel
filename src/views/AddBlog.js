@@ -26,6 +26,7 @@ class AddBlog extends React.Component {
       body: "",
       links: "",
       image: "",
+      tile_image:"",
       redirect: false,
     };
   }
@@ -58,6 +59,7 @@ class AddBlog extends React.Component {
       links: this.state.links,
       author:this.state.author,
       image: this.state.image,
+      tile_image:this.state.tile_image,
       index: uniqueId,
       datentime : String(new Date()),
     });
@@ -82,6 +84,19 @@ class AddBlog extends React.Component {
         this.notify("tc", "Image Uploaded", "success", "icon-check-2");
       });
     console.log(this.state.image);
+  }
+  async getFile1(e) {
+    var name = e.target.files[0].name + Date.now();
+    await storageRef.child(name).put(e.target.files[0]);
+    await storageRef
+      .child(name)
+      .getDownloadURL()
+      .then((url) => {
+        this.setState({ tile_image: url });
+        console.log(this.state.tile_image);
+        this.notify("tc", "Tile Image Uploaded", "success", "icon-check-2");
+      });
+    console.log(this.state.tile_image);
   }
   render() {
     if (this.state.redirect) {
@@ -161,13 +176,13 @@ class AddBlog extends React.Component {
                       </Col>
                     </Row>
                     <Row>
-                      <Col className="pr-md-1 text-center" md="6">
+                      <Col className="pr-md-1 text-center" md="6" xs="12">
                         <FormGroup className="border border-primary rounded p-4">
-                          <img src={this.state.image} alt=""></img>
+                          <img className='w-100' src={this.state.image} alt=""></img>
                           <i className="tim-icons icon-upload text-primary text-weight-bold"></i>
                           &nbsp;
                           <Button className="text-dark btn-primary" size="sm">
-                            Upload Tile Image
+                            Upload Hero Image
                           </Button>
                           <br />
                           <Input
@@ -179,9 +194,9 @@ class AddBlog extends React.Component {
                           />
                         </FormGroup>
                       </Col>
-                      {/* <Col className="pr-md-1 text-center" md="6">
+                      <Col className="pl-md-1 text-center" md="6" xs="12">
                         <FormGroup className="border border-primary rounded p-4">
-                          <img src={this.state.img} alt=""></img>
+                          <img className='w-100' src={this.state.tile_image} alt=""></img>
                           <i className="tim-icons icon-upload text-primary text-weight-bold"></i>
                           &nbsp;
                           <Button className="text-dark btn-primary" size="sm">
@@ -191,12 +206,12 @@ class AddBlog extends React.Component {
                           <Input
                             type="file"
                             onChange={(e) => {
-                              this.getFile(e);
+                              this.getFile1(e);
                             }}
                             required
                           />
                         </FormGroup>
-                      </Col> */}
+                      </Col>
                     </Row>
                   </Form>
                 </CardBody>

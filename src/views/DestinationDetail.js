@@ -16,6 +16,7 @@ import {
   Row,
   Col,
 } from "reactstrap";
+const storageRef = firebase.storage().ref();
 class DestinationDetail extends React.Component {
   constructor(props) {
     super(props);
@@ -23,6 +24,7 @@ class DestinationDetail extends React.Component {
       destname: window.$tmp.destname,
       body: window.$tmp.body,
       image: window.$tmp.image,
+      tile_image:window.$tmp.tile_image,
       address:window.$tmp.contact.address,
       phone:window.$tmp.contact.phone,
       website:window.$tmp.contact.website,
@@ -52,6 +54,32 @@ class DestinationDetail extends React.Component {
     this.refs.notificationAlert.notificationAlert(options);
     window.$notifications.push([message, "", icon]);
   };
+  async getFile(e) {
+    var name = e.target.files[0].name + Date.now();
+    await storageRef.child(name).put(e.target.files[0]);
+    await storageRef
+      .child(name)
+      .getDownloadURL()
+      .then((url) => {
+        this.setState({ image: url });
+        console.log(this.state.image);
+        this.notify("tc", "Image Uploaded", "success", "icon-check-2");
+      });
+    console.log(this.state.image);
+  }
+  async getFile1(e) {
+    var name = e.target.files[0].name + Date.now();
+    await storageRef.child(name).put(e.target.files[0]);
+    await storageRef
+      .child(name)
+      .getDownloadURL()
+      .then((url) => {
+        this.setState({ tile_image: url });
+        console.log(this.state.tile_image);
+        this.notify("tc", "Tile Image Uploaded", "success", "icon-check-2");
+      });
+    console.log(this.state.tile_image);
+  }
   async saveDestination(e) {
     var DestinationsRef = firebase
       .database()
@@ -62,6 +90,7 @@ class DestinationDetail extends React.Component {
       body: this.state.body,
       contact:{"address":this.state.address,"phone":this.state.phone,"website":this.state.website},
       image: this.state.image,
+      tile_image:this.state.tile_image,
       index: window.$tmp.index,
     });
     this.notify("tc", "Destination event saved.", "success", "icon-check-2");
@@ -201,16 +230,48 @@ class DestinationDetail extends React.Component {
                       </Col>
                     </Row>
                     <Row>
-                      <Col md="12">
-                        <FormGroup>
-                          <label>Image</label>
-                          <br />
+                      <Col className="pr-md-1 text-center" md="6" xs="12">
+                        <FormGroup className="border border-primary rounded p-4">
                           <img
-                            style={{ height: "300px" }}
-                            className="pr-3"
-                            src={window.$tmp.image}
-                            alt={window.$tmp.destname}
+                            className="w-100"
+                            src={this.state.image}
+                            alt=""
                           ></img>
+                          <i className="tim-icons icon-upload text-primary text-weight-bold"></i>
+                          &nbsp;
+                          <Button className="text-dark btn-primary" size="sm">
+                            Upload Hero Image
+                          </Button>
+                          <br />
+                          <Input
+                            type="file"
+                            onChange={(e) => {
+                              this.getFile(e);
+                            }}
+                            required
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col className="pl-md-1 text-center" md="6" xs="12">
+                        <FormGroup className="border border-primary rounded p-4">
+                          <img
+                            className="w-100"
+                            src={this.state.tile_image}
+                            alt=""
+                          ></img>
+                          <i className="tim-icons icon-upload text-primary text-weight-bold"></i>
+                          &nbsp;
+                          <Button className="text-dark btn-primary" size="sm">
+                            Upload Tile Image
+                          </Button>
+                          <br />
+                          <Input
+                            type="file"
+                            onChange={(e) => {
+                              this.getFile1(e);
+                            }}
+                            required
+                          />
                         </FormGroup>
                       </Col>
                     </Row>
@@ -226,14 +287,14 @@ class DestinationDetail extends React.Component {
                     Save
                   </Button>
                   {"   "}
-                  <Link to="/admin/Destination-events">
+                  <Link to="/admin/destinations">
                     <Button
                       className="btn-fill"
                       color="warning"
                       onClick={() => {
                         firebase
                           .database()
-                          .ref("Destination/" + window.$tmp.index)
+                          .ref("destination/" + window.$tmp.index)
                           .remove();
                         window.$notification = [
                           true,

@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import firebase from "../variables/config";
 import NotificationAlert from "react-notification-alert";
-import { v1 as uuidv1 } from 'uuid';
+import { v1 as uuidv1 } from "uuid";
 
 // reactstrap components
 import {
@@ -22,12 +22,13 @@ class AddDestination extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      destname: '',
-      body: '',
-      image: '',
-      address:'',
-      phone:'',
-      website:'',
+      destname: "",
+      body: "",
+      image: "",
+      tile_image: "",
+      address: "",
+      phone: "",
+      website: "",
       redirect: false,
     };
   }
@@ -50,27 +51,41 @@ class AddDestination extends React.Component {
   async addDestination(e) {
     try {
       var uniqueId = uuidv1();
-    var DestinationRef = firebase
-      .database()
-      .ref()
-      .child("destination/" + uniqueId);
-    DestinationRef.set({
-      destname: this.state.destname,
-      body: this.state.body,
-      contact:{"address":this.state.address,"phone":this.state.phone,"website":this.state.website},
-      image: this.state.image,
-      index: uniqueId,
-      datentime : String(new Date()),
-    });
-    window.$notification = [true, "Destination added.", "success", "icon-check-2"];
-    this.setState({ redirect: true });
-  }
-  catch (error) {
-    this.notify("tc", "Form can't be blank", "danger", "icon-simple-remove");
-    window.$notification = [true, "Form can't be blank", "danger", "icon-simple-remove"];
-    console.log(error);
+      var DestinationRef = firebase
+        .database()
+        .ref()
+        .child("destination/" + uniqueId);
+      DestinationRef.set({
+        destname: this.state.destname,
+        body: this.state.body,
+        contact: {
+          address: this.state.address,
+          phone: this.state.phone,
+          website: this.state.website,
+        },
+        image: this.state.image,
+        tile_image: this.state.tile_image,
+        index: uniqueId,
+        datentime: String(new Date()),
+      });
+      window.$notification = [
+        true,
+        "Destination added.",
+        "success",
+        "icon-check-2",
+      ];
+      this.setState({ redirect: true });
+    } catch (error) {
+      this.notify("tc", "Form can't be blank", "danger", "icon-simple-remove");
+      window.$notification = [
+        true,
+        "Form can't be blank",
+        "danger",
+        "icon-simple-remove",
+      ];
+      console.log(error);
     }
-  }  
+  }
   async getFile(e) {
     var name = e.target.files[0].name + Date.now();
     await storageRef.child(name).put(e.target.files[0]);
@@ -83,6 +98,19 @@ class AddDestination extends React.Component {
         this.notify("tc", "Image Uploaded", "success", "icon-check-2");
       });
     console.log(this.state.image);
+  }
+  async getFile1(e) {
+    var name = e.target.files[0].name + Date.now();
+    await storageRef.child(name).put(e.target.files[0]);
+    await storageRef
+      .child(name)
+      .getDownloadURL()
+      .then((url) => {
+        this.setState({ tile_image: url });
+        console.log(this.state.tile_image);
+        this.notify("tc", "Tile Image Uploaded", "success", "icon-check-2");
+      });
+    console.log(this.state.tile_image);
   }
   render() {
     if (this.state.redirect) {
@@ -169,7 +197,6 @@ class AddDestination extends React.Component {
                             placeholder="Website"
                             type="text"
                             className="bg-transparent text-light"
-                            
                             onChange={(e) => {
                               this.setState({ website: e.target.value });
                             }}
@@ -177,7 +204,7 @@ class AddDestination extends React.Component {
                         </FormGroup>
                       </Col>
                     </Row>
-                    
+
                     <Row>
                       <Col md="12">
                         <FormGroup>
@@ -196,13 +223,17 @@ class AddDestination extends React.Component {
                       </Col>
                     </Row>
                     <Row>
-                      <Col className="pr-md-1 text-center" md="6">
+                      <Col className="pr-md-1 text-center" md="6" xs="12">
                         <FormGroup className="border border-primary rounded p-4">
-                          <img src={this.state.image} alt=""></img>
+                          <img
+                            className="w-100"
+                            src={this.state.image}
+                            alt=""
+                          ></img>
                           <i className="tim-icons icon-upload text-primary text-weight-bold"></i>
                           &nbsp;
                           <Button className="text-dark btn-primary" size="sm">
-                            Upload Tile Image
+                            Upload Hero Image
                           </Button>
                           <br />
                           <Input
@@ -214,9 +245,13 @@ class AddDestination extends React.Component {
                           />
                         </FormGroup>
                       </Col>
-                      {/* <Col className="pr-md-1 text-center" md="6">
+                      <Col className="pl-md-1 text-center" md="6" xs="12">
                         <FormGroup className="border border-primary rounded p-4">
-                          <img src={this.state.img} alt=""></img>
+                          <img
+                            className="w-100"
+                            src={this.state.tile_image}
+                            alt=""
+                          ></img>
                           <i className="tim-icons icon-upload text-primary text-weight-bold"></i>
                           &nbsp;
                           <Button className="text-dark btn-primary" size="sm">
@@ -226,12 +261,12 @@ class AddDestination extends React.Component {
                           <Input
                             type="file"
                             onChange={(e) => {
-                              this.getFile(e);
+                              this.getFile1(e);
                             }}
                             required
                           />
                         </FormGroup>
-                      </Col> */}
+                      </Col>
                     </Row>
                   </Form>
                 </CardBody>
