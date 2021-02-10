@@ -275,7 +275,14 @@ class AddDestination extends React.Component {
                     className="btn-fill"
                     color="success"
                     type="submit"
-                    onClick={(e) => this.addDestination(e)}
+                    onClick={(e) => 
+                      {
+                        if(this.state.destname)
+                          this.addDestination(e);
+                        else
+                          this.notify("tc", "All fields are required!", "danger", "icon-simple-remove");
+                      }
+                    }
                   >
                     Add
                   </Button>
